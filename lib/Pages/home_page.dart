@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'Detail.dart';
+import 'candidate.dart';
 import 'candidate_form_page.dart';
 import 'candidate_info_page.dart';
 
@@ -25,6 +28,15 @@ class _CandidatesPageState extends State<CandidatesPage> {
     );
   }
 
+  void _showCandidateDetails(Candidate candidate) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CandidateInfoPage(candidate: candidate),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,19 +50,33 @@ class _CandidatesPageState extends State<CandidatesPage> {
           final candidate = candidates[index];
           return GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>candidate_info_page(candidate: candidate),
-                ),
-              );
+              _showCandidateDetails(candidate);
             },
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(candidate.imageUrl),
+            child: Card(
+              elevation: 4,
+              margin: EdgeInsets.all(8),
+              child: ListTile(
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    candidate.imageUrl,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                title: Text('${candidate.name} ${candidate.firstName}'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(candidate.description),
+                    SizedBox(height: 4),
+                    Text('Parti politique : ${candidate.party}'),
+                    SizedBox(height: 4),
+                    Text('Date de naissance : ${DateFormat.yMMMMd().format(candidate.selectedDate)}'),
+                  ],
+                ),
               ),
-              title: Text('${candidate.name} ${candidate.firstName}'),
-              subtitle: Text(candidate.description),
             ),
           );
         },
@@ -72,11 +98,9 @@ class _CandidatesPageState extends State<CandidatesPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Personne',
-          )
+          ),
         ],
       ),
     );
   }
-
-  candidate_info_page({required Candidate candidate}) {}
 }

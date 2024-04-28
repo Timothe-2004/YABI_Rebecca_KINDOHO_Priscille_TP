@@ -4,6 +4,7 @@ class Candidate {
   final String description;
   final String party;
   final String imageUrl;
+  DateTime selectedDate;
 
 
   Candidate({
@@ -12,6 +13,8 @@ class Candidate {
     required this.description,
     required this.party,
     required this.imageUrl,
-
+    required this.selectedDate,
   });
+
+  get birthDate => null;
 }
